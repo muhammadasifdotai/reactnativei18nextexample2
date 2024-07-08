@@ -1,117 +1,88 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
-import React from 'react';
-import type {PropsWithChildren} from 'react';
+import React, {useState} from 'react';
 import {
   SafeAreaView,
-  ScrollView,
-  StatusBar,
   StyleSheet,
   Text,
-  useColorScheme,
+  TouchableOpacity,
+  Modal,
   View,
+  FlatList,
 } from 'react-native';
+import i18next, {languageResources} from './services/i18next';
+import {useTranslation} from 'react-i18next';
+import languagesList from './services/languagesList.json';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+const App = () => {
+  const [visible, setVisible] = useState(false);
+  const {t} = useTranslation();
 
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
-
-function Section({children, title}: SectionProps): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-}
-
-function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+  const changeLng = lng => {
+    i18next.changeLanguage(lng);
+    setVisible(false);
   };
 
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
+    <SafeAreaView style={styles.container}>
+      <Modal visible={visible} onRequestClose={() => setVisible(false)}>
+        <View style={styles.languagesList}>
+          <FlatList
+            data={Object.keys(languageResources)}
+            renderItem={({item}) => (
+              <TouchableOpacity
+                style={styles.languageButton}
+                onPress={() => changeLng(item)}>
+                <Text style={styles.lngName}>
+                  {languagesList[item].nativeName}
+                </Text>
+              </TouchableOpacity>
+            )}
+          />
         </View>
-      </ScrollView>
+      </Modal>
+      <Text style={styles.text}>{t('welcome')}</Text>
+      <TouchableOpacity style={styles.button} onPress={() => setVisible(true)}>
+        <Text style={styles.buttonText}>{t('change-language')}</Text>
+      </TouchableOpacity>
     </SafeAreaView>
   );
-}
+};
 
 const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#191266',
   },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
+  button: {
+    backgroundColor: '#6258e8',
+    padding: 10,
+    borderRadius: 3,
   },
-  sectionDescription: {
-    marginTop: 8,
+  buttonText: {
+    color: 'white',
+    fontSize: 16,
+  },
+  text: {
+    marginBottom: 100,
     fontSize: 18,
-    fontWeight: '400',
+    color: 'white',
   },
-  highlight: {
-    fontWeight: '700',
+  languagesList: {
+    flex: 1,
+    justifyContent: 'center',
+    padding: 10,
+    backgroundColor: '#6258e8',
+  },
+
+  languageButton: {
+    padding: 10,
+    borderBottomColor: '#dddddd',
+    borderBottomWidth: 1,
+  },
+  lngName: {
+    fontSize: 16,
+    color: 'white',
   },
 });
 
