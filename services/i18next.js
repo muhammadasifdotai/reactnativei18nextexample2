@@ -2,6 +2,8 @@ import i18next from 'i18next';
 import {initReactI18next} from 'react-i18next';
 import en from '../locales/en.json';
 import sv from '../locales/sv.json';
+import ar from '../locales/ar.json';
+import ur from '../locales/ur.json';
 
 // languageResources: is an object, it will have different different languages, in our case is englis: which contain an object which have 'translation' and then we will pass the translation file or the translation json that we imported 
 // ... and same for the swedish
@@ -10,6 +12,8 @@ export const languageResources = {
   // here we have a list of two keys 'en: english' and 'sv: swedish'
   en: {translation: en},
   sv: {translation: sv},
+  ar: {translation: ar},
+  ur: {translation: ur},
 };
 
 // In this line we are using '.use' method provided by 'i18next' to add the 'initReactI18next' to our localization setup
